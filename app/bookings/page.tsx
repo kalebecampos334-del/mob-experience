@@ -15,9 +15,9 @@ interface Booking {
   notes: string | null;
   services: {
     name: string;
-    vendors: {
+    vendors: Array<{
       name: string;
-    };
+    }>;
   };
 }
 
@@ -144,7 +144,7 @@ export default function BookingsPage() {
                         {booking.services.name}
                       </h3>
                       <p className="text-sm text-gray-600">
-                        Vendor: {booking.services.vendors.name}
+                        Vendor: {booking.services.vendors[0].name}
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(booking.status)}`}>

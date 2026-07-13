@@ -1,6 +1,7 @@
 'use client';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -19,36 +20,55 @@ interface Service {
     category: string;
   }>;
 }
+
 export default function ServicesPage() {
   const searchParams = useSearchParams();
   const vendorId = searchParams.get('vendor');
   
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchServices = async () => {
-      let query = supabase
-        .from('services')
-        .select('id, name, description, price, duration_minutes, vendor_id, vendors(name, category)')
-        .order('name');
+      try {
+        let query = supabase
+          .from('services')
+          .select('id, name, description, price, duration_minutes, vendor_id, vendors(name, category)')
+          .order('name');
 
-      if (vendorId) {
-        query = query.eq('vendor_id', vendorId);
+        if (vendorId) {
+          query = query.eq('vendor_id', vendorId);
+        }
+
+        const { data, error: err } = await query;
+
+        if (err) {
+          console.error('Erro ao buscar serviços:', err);
+          setError('Erro ao carregar serviços');
+        } else {
+          setServices(data || []);
+        }
+      } catch (e) {
+        console.error('Erro:', e);
+        setError('Erro ao carregar serviços');
+      } finally {
+        setLoading(false);
       }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Erro ao buscar serviços:', error);
-      } else {
-        setServices(data || []);
-      }
-      setLoading(false);
     };
 
     fetchServices();
   }, [vendorId]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">

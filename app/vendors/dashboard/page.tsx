@@ -25,6 +25,8 @@ interface Service {
 export default function DashboardPage() {
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {

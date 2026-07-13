@@ -124,13 +124,10 @@ export default function BookingsPage() {
             <div className="text-center py-12">
               <p className="text-gray-500">Carregando agendamentos...</p>
             </div>
-          ) : bookings.length === 0 ? (
+) : bookings.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-8 text-center">
               <p className="text-gray-600 mb-4">Você não tem agendamentos ainda</p>
-              
-                href="/vendors"
-                className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-              >
+              <a href="/vendors" className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                 Explorar Vendors
               </a>
             </div>

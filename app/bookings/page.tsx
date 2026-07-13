@@ -13,12 +13,12 @@ interface Booking {
   status: string;
   total_price: number;
   notes: string | null;
-  services: {
+  services: Array<{
     name: string;
     vendors: Array<{
       name: string;
     }>;
-  };
+  }>;
 }
 
 export default function BookingsPage() {
@@ -140,12 +140,12 @@ export default function BookingsPage() {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900">
-                        {booking.services.name}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Vendor: {booking.services.vendors[0].name}
-                      </p>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {booking.services[0].name}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Vendor: {booking.services[0].vendors[0].name}
+                    </p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(booking.status)}`}>
                       {getStatusLabel(booking.status)}

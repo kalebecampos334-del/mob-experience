@@ -7,7 +7,7 @@ import ProtectedRoute from '@/app/components/ProtectedRoute';
 
 export default function DashboardPage() {
   const [vendor, setVendor] = useState(null);
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 

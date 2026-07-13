@@ -5,11 +5,26 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ProtectedRoute from '@/app/components/ProtectedRoute';
 
+interface Vendor {
+  id: string;
+  user_id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  description?: string;
+}
+
+interface Service {
+  id: string;
+  vendor_id: string;
+  name: string;
+  description?: string;
+  price: number;
+}
+
 export default function DashboardPage() {
-  const [vendor, setVendor] = useState(null);
-  const [services, setServices] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [vendor, setVendor] = useState<Vendor | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

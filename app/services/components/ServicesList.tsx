@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import BookingForm from '@/app/bookings/components/BookingForm';
 
 interface Service {
   id: string;
@@ -25,6 +26,7 @@ export default function ServicesList() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -126,7 +128,10 @@ export default function ServicesList() {
                     )}
                   </div>
 
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                  <button
+                    onClick={() => setSelectedService(service)}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  >
                     Agendar Serviço
                   </button>
                 </div>
@@ -135,6 +140,16 @@ export default function ServicesList() {
           </div>
         )}
       </div>
+
+      {selectedService && (
+        <BookingForm
+          serviceId={selectedService.id}
+          serviceName={selectedService.name}
+          price={selectedService.price}
+          onClose={() => setSelectedService(null)}
+          onSuccess={() => setSelectedService(null)}
+        />
+      )}
     </div>
   );
 }

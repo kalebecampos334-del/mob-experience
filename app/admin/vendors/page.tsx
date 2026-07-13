@@ -5,8 +5,18 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ProtectedRoute from '@/app/components/ProtectedRoute';
 
+interface Application {
+  id: string;
+  full_name: string;
+  user_email: string;
+  category: string;
+  bio: string;
+  document_url: string | null;
+  status: string;
+}
+
 export default function AdminVendorsPage() {
-  const [applications, setApplications] = useState([]);
+  const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 

@@ -33,7 +33,7 @@ export default function SignupPage() {
 
     try {
       // 1. Criar conta em auth.users
-      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
         password
       });
@@ -44,11 +44,25 @@ export default function SignupPage() {
         return;
       }
 
+      // Supabase retorna um user "ofuscado" (sem erro) quando o email
+      // já existe e já está confirmado. Nesse caso, identities vem vazio.
+      if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
+        setError('Este email já está cadastrado. Faça login ou use "Esqueci minha senha".');
+        setLoading(false);
+        return;
+      }
+
+      if (!authData.user) {
+        setError('Não foi possível criar a conta. Tente novamente.');
+        setLoading(false);
+        return;
+      }
+
       // 2. Criar cliente no banco
       const { error: clientError } = await supabase
         .from('clients')
         .insert({
-          user_id: authData.user?.id,
+          user_id: authData.user.id,
           name,
           email
         });

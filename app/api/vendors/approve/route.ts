@@ -121,9 +121,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, message: 'Vendor aprovado e email enviado!' });
   } catch (err) {
-    console.error('Erro no approve:', err);git add .
-git commit -m "feat: API route para aprovar vendor com email via Resend"
-git push origin main
+    console.error('Erro no approve:', err);
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mob Experience",
+  title: "Mob Casamentos",
   description: "SaaS marketplace para eventos",
 };
 

@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
       const { data: vendorData } = await supabase
         .from('vendors')
-        .select('*')
+        .select('id, user_id, name, email, phone, description, avatar_url')
         .eq('user_id', session.user.id)
         .single();
 

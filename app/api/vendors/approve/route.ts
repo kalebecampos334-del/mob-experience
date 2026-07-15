@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
       })
       .eq('id', applicationId);
 
-    if (emailError) {
+   if (emailError) {
       // Vendor foi criado, mas o email falhou -- avisa o admin
       return NextResponse.json(
         { warning: 'Vendor criado, mas o email falhou ao enviar.', emailError },

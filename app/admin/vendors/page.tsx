@@ -41,44 +41,59 @@ export default function AdminVendorsPage() {
     fetchApplications();
   }, [router]);
 
-async function handleApprove(app: any) {
-  try {
-    // 1. Criar conta em auth.users
-    const { data: newUser, error: authError } = await supabase.auth.admin.createUser({
-      email: app.user_email,
-      password: app.password_hash,
-      email_confirm: true
-    });
+  async function handleApprove(app: any) {
+    try {
+      const response = await fetch('/api/vendors/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          application_id: app.id,
+          user_email: app.user_email,
+          full_name: app.full_name,
+          category: app.category,
+          phone: app.phone,
+        }),
+      });
 
-    if (authError) {
-      alert(`Erro: ${authError.message}`);
-      return;
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(`Erro: ${result.error}`);
+        return;
+      }
+
+      alert('✅ Vendor aprovado e email enviado!');
+      setApplications(applications.filter(a => a.id !== app.id));
+    } catch (err) {
+      console.error('Erro:', err);
+      alert('Erro ao aprovar vendor');
     }
-
-    // 2. Criar vendor
-    await supabase.from('vendors').insert({
-      user_id: newUser.user.id,
-      name: app.full_name,
-      email: app.user_email,
-      phone: app.phone,
-      description: app.bio,
-      category: app.category,
-      status: 'approved',
-      approved_at: new Date()
-    });
-
-    // 3. Atualizar status da aplicação
-    await supabase
-      .from('vendor_applications')
-      .update({ status: 'approved' })
-      .eq('id', app.id);
-
-    alert('✅ Vendor aprovado!');
-    setApplications(applications.filter(a => a.id !== app.id));
-  } catch (err) {
-    alert('Erro ao aprovar vendor');
   }
-}
+
+  async function handleReject(app: any) {
+    try {
+      const response = await fetch('/api/vendors/reject', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          application_id: app.id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(`Erro: ${result.error}`);
+        return;
+      }
+
+      alert('❌ Vendor rejeitado');
+      setApplications(applications.filter(a => a.id !== app.id));
+    } catch (err) {
+      console.error('Erro:', err);
+      alert('Erro ao rejeitar vendor');
+    }
+  }
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
 
